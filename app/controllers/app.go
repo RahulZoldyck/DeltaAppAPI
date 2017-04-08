@@ -43,6 +43,11 @@ func (c App) Login() revel.Result {
 	status:= SqlAuth(request.RollNo,request.Password)
 	if !status {
 		s:= LoginResponse {hash(tokenstring),false,301}
+		js,err := json.Marshal(s)
+	if(err!=nil) {
+		panic(err)
+	}
+	return c.RenderJson(string(js))
 	}
 	s := LoginResponse {hash(tokenstring),true,200}
 	js,err := json.Marshal(s)
@@ -85,7 +90,7 @@ type ScrumResponse struct {
 	ScrumTalks []models.ScrumTalks
 }
 
-func ScrumTalks() revel.Result {
+func (c App) ScrumTalks() revel.Result {
 	scrumTalks:= GetScrumTalks()
 	sr := ScrumResponse {scrumTalks}
 	js,err := json.Marshal(sr)
