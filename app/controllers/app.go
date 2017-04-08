@@ -54,5 +54,12 @@ type PeopleInDeanResponse struct {
 }
 
 func (c App) PeopleInDean() revel.Result {
-	return c.Render()
+	pid:=GetPeopleInDean()
+	phk:=GetPeopleHasKey()
+	pidr:=PeopleInDeanResponse{pid,phk}
+	js,err := json.Marshal(pidr)
+	if(err!=nil) {
+		panic(err)
+	}
+	return c.RenderJson(string(js))
 }
