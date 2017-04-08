@@ -40,6 +40,10 @@ func (c App) Login() revel.Result {
     err := json.NewDecoder(c.Request.Body).Decode(&request)
 	currTime := time.Now().UnixNano() / int64(time.Millisecond)
 	tokenstring := strconv.FormatInt(currTime,10)+ strconv.FormatInt(request.RollNo,10)
+	status:= SqlAuth(request.RollNo,request.Password)
+	if !status {
+		s:= LoginResponse {hash(tokenstring),false,301}
+	}
 	s := LoginResponse {hash(tokenstring),true,200}
 	js,err := json.Marshal(s)
 	if(err!=nil) {
@@ -58,6 +62,33 @@ func (c App) PeopleInDean() revel.Result {
 	phk:=GetPeopleHasKey()
 	pidr:=PeopleInDeanResponse{pid,phk}
 	js,err := json.Marshal(pidr)
+	if(err!=nil) {
+		panic(err)
+	}
+	return c.RenderJson(string(js))
+}
+
+type NotificationsResponse struct {
+	Notifications []models.Notifications
+}
+func (c App) Notifications() revel.Result {
+	notifications:= GetNotifications()
+	nr := NotificationsResponse {notifications}
+	js,err := json.Marshal(nr)
+	if(err!=nil) {
+		panic(err)
+	}
+	return c.RenderJson(string(js))
+}
+
+type ScrumResponse struct {
+	ScrumTalks []models.ScrumTalks
+}
+
+func ScrumTalks() revel.Result {
+	scrumTalks:= GetScrumTalks()
+	sr := ScrumResponse {scrumTalks}
+	js,err := json.Marshal(sr)
 	if(err!=nil) {
 		panic(err)
 	}

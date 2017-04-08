@@ -7,7 +7,8 @@ module:testrunner
 GET     /                                       App.Index
 POST    /login									App.Login
 POST    /pid									App.PeopleInDean
-
+POST    /notifications							App.Notifications
+POST    /scrum									App.ScrumTalks
 
 # Ignore favicon requests
 GET     /favicon.ico                            404
